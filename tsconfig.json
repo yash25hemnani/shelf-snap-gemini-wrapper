@@ -17,7 +17,12 @@
     "routes/**/*.ts",
     "controllers/**/*.ts",
     "types/**/*.ts",
-    "constants/**/*.ts"
+    "constants/**/*.ts",
+    "config/**/*.ts",
+    "middleware/**/*.ts"
   ],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist"],
+  "ts-node": {
+    "files": true
+  }
 }

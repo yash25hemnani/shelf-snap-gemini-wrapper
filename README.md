@@ -16,13 +16,15 @@ npm install
 
 Create a `.env` file in the project root:
 
-| Variable            | Required | Description                                                                 |
-| ------------------- | -------- | ----------------------------------------------------------------------------- |
-| `GEMINI_API_KEY`    | yes      | API key for the Gemini API. The server refuses to start without it.           |
-| `APP_SHARED_SECRET` | no       | If set, requests must send a matching `x-app-secret` header.                  |
-| `PORT`              | no       | Port to listen on (default `3000`).                                           |
-| `LOG_LEVEL`         | no       | Pino log level (default `info`).                                              |
-| `NODE_ENV`          | no       | Set to `production` to log structured JSON instead of pretty-printed output.  |
+| Variable               | Required | Description                                                                 |
+| ---------------------- | -------- | ----------------------------------------------------------------------------- |
+| `GEMINI_API_KEY`       | yes      | API key for the Gemini API. The server refuses to start without it.           |
+| `FIREBASE_PROJECT_ID`  | yes      | Firebase project ID for the service account used to verify ID tokens.         |
+| `FIREBASE_CLIENT_EMAIL`| yes      | Service account client email (from the Firebase service account JSON).        |
+| `FIREBASE_PRIVATE_KEY` | yes      | Service account private key. The server refuses to start without these.      |
+| `PORT`                 | no       | Port to listen on (default `3000`).                                           |
+| `LOG_LEVEL`            | no       | Pino log level (default `info`).                                              |
+| `NODE_ENV`             | no       | Set to `production` to log structured JSON instead of pretty-printed output.  |
 
 ## Running
 
@@ -36,7 +38,7 @@ npm start      # run the compiled output
 
 ### `POST /identify-books`
 
-**Headers** (if `APP_SHARED_SECRET` is set): `x-app-secret: <secret>`
+**Headers**: `Authorization: Bearer <Firebase ID token>`
 
 **Body**
 
@@ -62,5 +64,5 @@ On failure: `{ "error": "..." }` with a `400`, `401`, or `502` status.
 
 ## Notes
 
-- `APP_SHARED_SECRET` is a stand-in gate to keep casual requests off your Gemini bill during development — swap it for real auth (e.g. a Firebase ID token check) before deploying publicly.
+- Every route requires a valid Firebase ID token (see [middleware/auth.middleware.ts](middleware/auth.middleware.ts)). Sign in with the Firebase client SDK and send the resulting ID token as `Authorization: Bearer <token>`; the server verifies it against your Firebase project via the Admin SDK (configured in [config/firebase.ts](config/firebase.ts)).
 - Requests and Gemini call timing are logged via [pino](https://github.com/pinojs/pino) (see [utils/logger.ts](utils/logger.ts)); HTTP request/response logging is wired up in [server.ts](server.ts) via `pino-http`.

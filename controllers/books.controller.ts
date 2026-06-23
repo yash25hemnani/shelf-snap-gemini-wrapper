@@ -9,7 +9,6 @@ import { logger } from "../utils/logger";
 import { Book, IdentifyBooksRequestBody } from "../types/books.types";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const SHARED_SECRET = process.env.APP_SHARED_SECRET;
 
 if (!GEMINI_API_KEY) {
   logger.error("Missing GEMINI_API_KEY in .env — refusing to start.");
@@ -48,13 +47,6 @@ ${JSON.stringify({ imageWidth, imageHeight, blocks })}`;
 }
 
 export async function identifyBooks(req: Request, res: Response) {
-  // Stand-in gate so casual randoms can't hit your Gemini bill while
-  // testing — swap for real auth (e.g. verifying a Firebase ID token)
-  // before deploying anywhere public.
-  if (SHARED_SECRET && req.headers["x-app-secret"] !== SHARED_SECRET) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
   const { imageWidth, imageHeight, blocks } = req.body ?? {};
 
   if (!Array.isArray(blocks) || blocks.length === 0) {
@@ -66,7 +58,7 @@ export async function identifyBooks(req: Request, res: Response) {
 
   logger.info(
     { blockCount: blocks.length, imageWidth, imageHeight },
-    "identifyBooks request received",
+    "identify-books request received",
   );
 
   try {
@@ -114,4 +106,8 @@ export async function identifyBooks(req: Request, res: Response) {
     logger.error({ err }, "Gemini call failed");
     res.status(502).json({ error: "Failed to reach Gemini API" });
   }
+}
+
+export function getHealth(req: Request, res: Response) {
+  res.json({ status: "ok" });
 }
