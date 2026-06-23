@@ -6,7 +6,23 @@
       "Bash(curl -sS -o /dev/null -w \"HTTP %{http_code} in %{time_total}s\\\\n\" --max-time 15 https://github.com)",
       "Bash(GIT_TRACE=1 GIT_CURL_VERBOSE=1 git push origin main)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/wrapper-health)",
-      "Bash(powershell -Command 'Get-CimInstance Win32_Process -Filter \"name='\\\\''node.exe'\\\\''\" | Where-Object { $_.CommandLine -like '\\\\''*server.ts*'\\\\'' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }')"
+      "Bash(powershell -Command 'Get-CimInstance Win32_Process -Filter \"name='\\\\''node.exe'\\\\''\" | Where-Object { $_.CommandLine -like '\\\\''*server.ts*'\\\\'' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }')",
+      "Bash(find node_modules -maxdepth 2 -name \"jwks-rsa\")",
+      "Bash(node -e \"const pkgs = require\\('./package-lock.json'\\); for \\(const [k,v] of Object.entries\\(pkgs.packages||{}\\)\\) { if \\(v.dependencies && v.dependencies['jwks-rsa']\\) console.log\\(k\\); }\")",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/jwks-rsa/package.json'\\).dependencies\\)\")",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/jose/package.json'\\).version\\)\")",
+      "Bash(node -e \"console.log\\(JSON.stringify\\(require\\('./node_modules/jose/package.json'\\).exports, null, 2\\)\\)\")",
+      "Bash(npm view *)",
+      "Bash(node -e \"const v=JSON.parse\\(require\\('fs'\\).readFileSync\\(0,'utf8'\\)\\); console.log\\(v.filter\\(x=>x.startsWith\\('4.'\\)||x.startsWith\\('5.'\\)\\).slice\\(-10\\)\\)\")",
+      "Bash(curl -s https://registry.npmjs.org/jose/5.10.0)",
+      "Bash(node -e \"const d=JSON.parse\\(require\\('fs'\\).readFileSync\\(0,'utf8'\\)\\); console.log\\(JSON.stringify\\(d.exports['.'], null, 2\\)\\); console.log\\('main:', d.main\\); console.log\\('type:', d.type\\);\")",
+      "Bash(node -e \"const d=JSON.parse\\(require\\('fs'\\).readFileSync\\(0,'utf8'\\)\\); console.log\\(d.exports['./key/import'], d.exports['./key/export']\\);\")",
+      "Bash(node -e \"console.log\\('version:', require\\('./node_modules/jose/package.json'\\).version\\); console.log\\('resolved entry:', require.resolve\\('jose'\\)\\);\")",
+      "Bash(node -e \"console.log\\('version:', require\\('jose/package.json'\\).version\\); console.log\\('resolved entry:', require.resolve\\('jose'\\)\\);\")",
+      "Bash(node -e \"console.log\\('resolved entry:', require.resolve\\('jose'\\)\\);\")",
+      "Bash(node -e \"console.log\\(require.resolve\\('jose', { paths: ['node_modules/jwks-rsa'] }\\)\\)\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
