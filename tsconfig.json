@@ -14,6 +14,8 @@
   },
   "include": [
     "server.ts",
+    "app.ts",
+    "api/**/*.ts",
     "routes/**/*.ts",
     "controllers/**/*.ts",
     "types/**/*.ts",
